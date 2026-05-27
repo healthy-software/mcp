@@ -38,6 +38,45 @@ class OpenMeteoClient:
         )
         return [Location.from_open_meteo(item) for item in payload.get("results", [])]
 
+    def get_forecast(
+        self,
+        latitude: float,
+        longitude: float,
+        forecast_days: int | None = None,
+        include_hourly: bool = False,
+    ) -> dict[str, Any]:
+        """Fetch curated Open-Meteo forecast data."""
+
+        days = forecast_days or self.settings.default_forecast_days
+        if days < 1 or days > self.settings.max_forecast_days:
+            raise ValidationError(f"forecast_days must be between 1 and {self.settings.max_forecast_days}")
+
+        params: dict[str, Any] = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "forecast_days": days,
+            "timezone": "auto",
+            "current": ",".join(self.settings.current_weather_fields),
+            "daily": ",".join(self.settings.daily_forecast_fields),
+        }
+        if include_hourly:
+            params["hourly"] = ",".join(self.settings.hourly_forecast_fields)
+
+        payload = self._get_json(self.settings.forecast_url, "forecast", params=params)
+        return {
+            "provider": "Open-Meteo",
+            "coordinates": {"latitude": latitude, "longitude": longitude},
+            "timezone": payload.get("timezone"),
+            "timezone_abbreviation": payload.get("timezone_abbreviation"),
+            "utc_offset_seconds": payload.get("utc_offset_seconds"),
+            "current": payload.get("current"),
+            "current_units": payload.get("current_units"),
+            "daily": payload.get("daily"),
+            "daily_units": payload.get("daily_units"),
+            "hourly": payload.get("hourly") if include_hourly else None,
+            "hourly_units": payload.get("hourly_units") if include_hourly else None,
+        }
+
     def _get_json(
         self,
         url: str,
