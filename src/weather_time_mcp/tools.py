@@ -27,6 +27,24 @@ def register_tools(server: FastMCP) -> None:
         return service.get_current_weather(location=location, latitude=latitude, longitude=longitude)
 
     @server.tool()
+    def get_weather_forecast(
+        location: str | None = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
+        forecast_days: int | None = None,
+        include_hourly: bool = False,
+    ) -> dict[str, object]:
+        """Get a weather forecast for a location name or coordinates."""
+
+        return service.get_weather_forecast(
+            location=location,
+            latitude=latitude,
+            longitude=longitude,
+            forecast_days=forecast_days,
+            include_hourly=include_hourly,
+        )
+
+    @server.tool()
     def list_timezones() -> dict[str, object]:
         """List IANA timezone names supported by the time provider."""
 

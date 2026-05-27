@@ -66,6 +66,36 @@ class WeatherTimeService:
             "current_units": forecast["current_units"],
         }
 
+    def get_weather_forecast(
+        self,
+        location: str | None = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
+        forecast_days: int | None = None,
+        include_hourly: bool = False,
+    ) -> dict[str, object]:
+        try:
+            resolved_latitude, resolved_longitude, resolved_location = self._resolve_coordinates(
+                location,
+                latitude,
+                longitude,
+            )
+            forecast = self.open_meteo.get_forecast(
+                latitude=resolved_latitude,
+                longitude=resolved_longitude,
+                forecast_days=forecast_days,
+                include_hourly=include_hourly,
+            )
+        except WeatherTimeMcpError as exc:
+            return exc.to_response()
+
+        return {
+            "ok": True,
+            "provider": "Open-Meteo",
+            "resolved_location": resolved_location,
+            **forecast,
+        }
+
     def _resolve_coordinates(
         self,
         location: str | None,
