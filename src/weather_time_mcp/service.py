@@ -105,6 +105,8 @@ class WeatherTimeService:
             resolved_location = None
             resolved_timezone = timezone.strip() if timezone else None
             if location:
+                # A freshly resolved location wins over any timezone argument; LLMs can
+                # carry stale tool arguments across turns.
                 candidate = self.resolver.resolve_one(location)
                 resolved_location = candidate.to_dict()
                 resolved_timezone = candidate.timezone

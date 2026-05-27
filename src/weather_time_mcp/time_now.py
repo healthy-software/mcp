@@ -26,6 +26,7 @@ class TimeNowClient:
         if "/" not in normalized_timezone:
             raise ValidationError("timezone must be an IANA timezone such as Asia/Kolkata")
 
+        # Time.now encodes IANA timezone components as path segments.
         path = "/timezone/" + "/".join(part for part in normalized_timezone.split("/") if part)
         payload = self._get_json(path, "timezone lookup")
         return {

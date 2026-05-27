@@ -1,0 +1,8 @@
+services:
+  weather-time-mcp:
+    build:
+      context: .
+    image: weather-time-mcp:local
+    command: ["weather-time-mcp"]
+    stdin_open: true
+    tty: true

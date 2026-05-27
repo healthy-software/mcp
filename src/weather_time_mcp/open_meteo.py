@@ -51,6 +51,8 @@ class OpenMeteoClient:
         if days < 1 or days > self.settings.max_forecast_days:
             raise ValidationError(f"forecast_days must be between 1 and {self.settings.max_forecast_days}")
 
+        # Keep the MCP tool assistant-friendly by exposing curated defaults
+        # instead of the full Open-Meteo parameter surface.
         params: dict[str, Any] = {
             "latitude": latitude,
             "longitude": longitude,

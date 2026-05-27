@@ -31,6 +31,8 @@ def is_ambiguous_location(query: str, candidates: list[Location]) -> bool:
     if len(candidates) <= 1:
         return False
 
+    # Auto-select only when the first result is clearly dominant; otherwise
+    # return candidates so the LLM can ask the user to clarify the place.
     normalized_query = query.strip().casefold()
     first = candidates[0]
     second = candidates[1]
