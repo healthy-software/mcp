@@ -31,6 +31,6 @@
 
 ## 5. Documentation
 
-- [ ] 5.1 Document server setup and MCP client configuration
-- [ ] 5.2 Document available tools, parameters, and example prompts
-- [ ] 5.3 Add Open-Meteo and Time.now attribution
+- [x] 5.1 Document server setup and MCP client configuration
+- [x] 5.2 Document available tools, parameters, and example prompts
+- [x] 5.3 Add Open-Meteo and Time.now attribution
