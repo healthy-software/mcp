@@ -17,6 +17,16 @@ def register_tools(server: FastMCP) -> None:
         return service.search_locations(query, count=count)
 
     @server.tool()
+    def get_current_weather(
+        location: str | None = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
+    ) -> dict[str, object]:
+        """Get current weather for a location name or coordinates."""
+
+        return service.get_current_weather(location=location, latitude=latitude, longitude=longitude)
+
+    @server.tool()
     def list_timezones() -> dict[str, object]:
         """List IANA timezone names supported by the time provider."""
 
