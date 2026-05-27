@@ -57,4 +57,4 @@ def register_tools(server: FastMCP) -> None:
     def list_timezones() -> dict[str, object]:
         """List IANA timezone names supported by the time provider."""
 
-        raise NotImplementedError("list_timezones is implemented in a later task")
+        return service.list_timezones()

@@ -121,6 +121,12 @@ class WeatherTimeService:
             **current_time,
         }
 
+    def list_timezones(self) -> dict[str, object]:
+        try:
+            return {"ok": True, **self.time_now.list_timezones()}
+        except WeatherTimeMcpError as exc:
+            return exc.to_response()
+
     def _resolve_coordinates(
         self,
         location: str | None,
