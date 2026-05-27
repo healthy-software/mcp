@@ -1,5 +1,7 @@
 """Configuration defaults for upstream APIs."""
 
+from dataclasses import dataclass, field
+
 OPEN_METEO_GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search"
 OPEN_METEO_FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
 TIME_NOW_BASE_URL = "https://time.now/developer/api"
@@ -43,3 +45,22 @@ DAILY_FORECAST_FIELDS = [
     "precipitation_probability_max",
     "wind_speed_10m_max",
 ]
+
+
+@dataclass(frozen=True)
+class Settings:
+    """Runtime settings shared by clients and tools."""
+
+    geocoding_url: str = OPEN_METEO_GEOCODING_URL
+    forecast_url: str = OPEN_METEO_FORECAST_URL
+    time_now_base_url: str = TIME_NOW_BASE_URL
+    timeout_seconds: float = REQUEST_TIMEOUT_SECONDS
+    default_location_count: int = DEFAULT_LOCATION_COUNT
+    default_forecast_days: int = DEFAULT_FORECAST_DAYS
+    max_forecast_days: int = MAX_FORECAST_DAYS
+    current_weather_fields: list[str] = field(default_factory=lambda: CURRENT_WEATHER_FIELDS.copy())
+    hourly_forecast_fields: list[str] = field(default_factory=lambda: HOURLY_FORECAST_FIELDS.copy())
+    daily_forecast_fields: list[str] = field(default_factory=lambda: DAILY_FORECAST_FIELDS.copy())
+
+
+DEFAULT_SETTINGS = Settings()
