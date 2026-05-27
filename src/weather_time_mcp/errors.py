@@ -16,6 +16,12 @@ class ValidationError(WeatherTimeMcpError):
     code = "validation_error"
 
 
+class MissingTimezoneError(ValidationError):
+    """Raised when a resolved location has no timezone."""
+
+    code = "missing_timezone"
+
+
 class UpstreamError(WeatherTimeMcpError):
     """Raised when an upstream provider fails."""
 

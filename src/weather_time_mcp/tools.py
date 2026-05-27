@@ -45,6 +45,15 @@ def register_tools(server: FastMCP) -> None:
         )
 
     @server.tool()
+    def get_current_time(
+        timezone: str | None = None,
+        location: str | None = None,
+    ) -> dict[str, object]:
+        """Get current time for an IANA timezone or resolved location."""
+
+        return service.get_current_time(timezone=timezone, location=location)
+
+    @server.tool()
     def list_timezones() -> dict[str, object]:
         """List IANA timezone names supported by the time provider."""
 

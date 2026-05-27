@@ -1,7 +1,7 @@
 """Application service used by MCP tools."""
 
 from weather_time_mcp.config import DEFAULT_SETTINGS, Settings
-from weather_time_mcp.errors import ValidationError, WeatherTimeMcpError
+from weather_time_mcp.errors import MissingTimezoneError, ValidationError, WeatherTimeMcpError
 from weather_time_mcp.open_meteo import OpenMeteoClient
 from weather_time_mcp.resolver import LocationResolver
 from weather_time_mcp.time_now import TimeNowClient
@@ -94,6 +94,31 @@ class WeatherTimeService:
             "provider": "Open-Meteo",
             "resolved_location": resolved_location,
             **forecast,
+        }
+
+    def get_current_time(
+        self,
+        timezone: str | None = None,
+        location: str | None = None,
+    ) -> dict[str, object]:
+        try:
+            resolved_location = None
+            resolved_timezone = timezone.strip() if timezone else None
+            if location:
+                candidate = self.resolver.resolve_one(location)
+                resolved_location = candidate.to_dict()
+                resolved_timezone = candidate.timezone
+            if not resolved_timezone:
+                raise MissingTimezoneError("provide timezone or a location with timezone metadata")
+
+            current_time = self.time_now.get_current_time(resolved_timezone)
+        except WeatherTimeMcpError as exc:
+            return exc.to_response()
+
+        return {
+            "ok": True,
+            "resolved_location": resolved_location,
+            **current_time,
         }
 
     def _resolve_coordinates(
